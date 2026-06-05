@@ -2,9 +2,12 @@
 
 import numpy as np
 from scipy import sparse
-from dgl import DGLGraph
+import dgl
 from dgl import backend as F
-from dgl.transform import pairwise_squared_distance
+try:
+    from dgl.geometry import pairwise_squared_distance
+except ImportError:
+    from dgl.transform import pairwise_squared_distance
 
 '''copied from dgl.transform and fixed a bug'''
 
@@ -53,7 +56,7 @@ def knn_graph(x, k):
     adj = sparse.csr_matrix((F.asnumpy(F.zeros_like(dst) + 1), (F.asnumpy(dst), F.asnumpy(src))),
                             shape=(n_total_points, n_total_points))
 
-    g = DGLGraph(adj, readonly=True)
+    g = dgl.from_scipy(adj)
     return g
 
 
@@ -98,13 +101,9 @@ def segmented_knn_graph(x, k, segs):
     adj = sparse.csr_matrix((F.asnumpy(F.zeros_like(dst) + 1), (F.asnumpy(dst), F.asnumpy(src))),
                             shape=(n_total_points, n_total_points))
 
-    g = DGLGraph(adj, readonly=True)
+    g = dgl.from_scipy(adj)
     return g
 
 
 def reversed_graph(g):
-    ret = DGLGraph()
-    ret.add_nodes(g.number_of_nodes())
-    u, v = g.all_edges()
-    ret.add_edges(v, u)
-    return ret
+    return dgl.reverse(g)

@@ -62,7 +62,7 @@ def main():
     parser.add_argument('--lr-steps', type=str, default='10,20')
     parser.add_argument('--num-workers', type=int, default=0)
     parser.add_argument('--batch-size', type=int, default=-1)
-    parser.add_argument('--device', type=str, default='cuda:0')
+    parser.add_argument('--device', type=str, default='cpu')
     args = parser.parse_args()
 
     if 'lund' in args.model:

@@ -3,7 +3,10 @@
 from __future__ import print_function
 
 import dgl
-from dgl.transform import remove_self_loop
+try:
+    from dgl import remove_self_loop
+except ImportError:
+    from dgl.transform import remove_self_loop
 from .dgl_utils import segmented_knn_graph
 import torch
 import torch.nn as nn

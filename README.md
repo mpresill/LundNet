@@ -12,7 +12,9 @@ LundNet is a jet tagging framework to train graph-based jet tagging strategies.
 
 ## Install LundNet
 
-LundNet is tested and supported on 64-bit systems running Linux.
+### Linux (64-bit)
+
+LundNet was originally developed and tested on 64-bit Linux systems.
 
 Install LundNet with Python's pip package manager:
 ```
@@ -29,18 +31,63 @@ We recommend the installation of the LundNet package using a `miniconda3`
 environment with the
 [configuration specified here](https://github.com/fdreyer/LundNet/blob/master/environment.yml).
 
+### macOS (Apple Silicon M1/M2/M3, miniforge)
+
+LundNet can also be run on Apple Silicon Macs using
+[miniforge](https://github.com/conda-forge/miniforge) (recommended over
+miniconda on arm64).
+
+**Prerequisites:** make sure you have the Xcode Command Line Tools installed,
+as `fastjet` needs to be compiled from source:
+
+```
+xcode-select --install
+```
+
+**1. Create the conda environment**
+
+```
+conda env create -f environment_mac_arm64.yml
+conda activate lundnet_mac
+```
+
+**2. Install LundNet**
+
+```
+pip install -e .
+```
+
+**3. Run a quick test**
+
+```
+lundnet --demo --save test --device cpu --num-epochs 1
+```
+
+**Device options on Apple Silicon:**
+
+- `--device cpu` — safe default; uses all CPU cores via PyTorch's ARM-optimised
+  backend with Apple's Accelerate framework (BLAS).
+- `--device mps` — uses Apple's Metal GPU (MPS backend, requires PyTorch ≥ 1.12).
+  DGL's MPS support is still experimental; `--device cpu` is recommended for
+  stability.
+
+**Performance note:** Training on an M2 CPU is roughly 5–10× slower than a
+mid-range NVIDIA GPU.  Using `--device mps` can reduce that gap to roughly
+2–4×.  For exploratory work, demos, and inference on pre-trained models, the
+M2 is very capable and noticeably faster than most x86 laptop CPUs.
+
 LundNet requires the following python 3 packages:
 - torch
-- dgl
+- dgl (≥ 0.9, installed via pip)
 - numpy
-- [fastjet](http://fastjet.fr/) (compiled with --enable-pyext)
+- [fastjet](http://fastjet.fr/) (installed via pip; compiled from source)
 - pandas
 - json
 - gzip
 - argparse
 - tqdm
 - networkx
-- uproot_methods
+- uproot3-methods
 - scipy
 - sklearn
 
