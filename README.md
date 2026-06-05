@@ -10,6 +10,65 @@ This repository contains the code and results presented in
 
 LundNet is a jet tagging framework to train graph-based jet tagging strategies.
 
+## Paper Summary
+
+**"Jet tagging in the Lund plane with graph networks"**
+F. A. Dreyer and H. Qu — [arXiv:2012.08526](https://arxiv.org/abs/2012.08526)
+
+### Motivation
+
+Identifying the origin of a high-energy jet (a collimated spray of particles
+produced in a particle collider) is a central challenge in experimental
+high-energy physics.  Previous deep-learning taggers either treat jets as
+images or as unordered sets of particles, discarding the rich hierarchical
+structure of the jet's internal radiation pattern.
+
+### Approach
+
+The paper proposes representing a jet as a **graph built from its Cambridge/Aachen
+declustering tree** — the Lund tree — and applying **graph neural networks
+(GNNs)** directly on that tree.
+
+Key ideas:
+
+1. **Lund plane representation.**  A jet is recursively declustered into pairs
+   of subjets.  Each splitting is described by five Lund coordinates:
+   `ln(1/z)`, `ln(1/Δ)`, `ln(kT)`, the azimuthal angle `ψ`, and `ln(m)`.
+   These variables have well-understood physical interpretations and are
+   directly calculable in perturbative QCD.
+
+2. **Graph construction.**  Each branching in the declustering tree becomes a
+   node in the graph, and edges connect parent–child splittings, preserving
+   the hierarchical structure of the shower.  Both the primary (harder) and
+   secondary (softer) branches are included.
+
+3. **EdgeConv layers.**  The GNN uses EdgeConv blocks (from Dynamic Graph CNN),
+   which aggregate messages from neighbouring nodes by computing a learned
+   function of `(h_i − h_j, h_j)` for each edge `(i, j)`.  Multiple stacked
+   EdgeConv layers with a feature-fusion mechanism allow the network to capture
+   both local and global radiation patterns.
+
+4. **Model variants.**  Several LundNet variants are studied by varying the
+   number of Lund input features (LundNet-2 through LundNet-5) to probe which
+   physical variables carry the most discriminating information.
+
+### Results
+
+The models are evaluated on two standard jet-tagging benchmarks:
+
+- **W-jet tagging** (boosted W boson vs. QCD background): LundNet-5 matches
+  or surpasses the state-of-the-art ParticleNet, while using a physically
+  motivated, interpretable graph structure instead of a dense particle cloud.
+- **Top-jet tagging** (boosted top quark vs. QCD background): similar
+  competitive performance, demonstrating the approach generalises across
+  topologies.
+
+Beyond raw performance, the Lund-plane graph structure makes the network
+**more interpretable**: by inspecting which nodes and edges receive high
+attention, one can trace the classification decision back to specific soft
+and collinear splittings in the jet shower — something that is much harder
+with image- or particle-cloud-based approaches.
+
 ## Install LundNet
 
 ### Linux (64-bit)
