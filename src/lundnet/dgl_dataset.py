@@ -5,7 +5,10 @@ from __future__ import print_function
 import dgl
 import networkx as nx
 import numpy as np
-from dgl.transform import remove_self_loop
+try:
+    from dgl import remove_self_loop
+except ImportError:
+    from dgl.transform import remove_self_loop
 from .dgl_utils import knn_graph
 from torch.utils.data import Dataset
 from .JetTree import JetTree, LundCoordinates
@@ -144,7 +147,7 @@ class DGLGraphDatasetParticle(Dataset):
         spatialCoord = np.stack([delta_eta_reflect(constits_p4, jet_p4), constits_p4.delta_phi(jet_p4)], axis=1)
         energyFeatures = np.log(np.stack([constits_p4.pt, constits_p4.energy], axis=1))
         features = np.concatenate([spatialCoord, energyFeatures], axis=1)
-        ret = dgl.DGLGraph()
+        ret = dgl.graph(([], []))
         ret.add_nodes(
             len(constits),
             {'coordinates': torch.tensor(spatialCoord, dtype=torch.float32),

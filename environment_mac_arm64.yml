@@ -1,0 +1,21 @@
+name: lundnet_mac
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - numpy
+  - scipy
+  - pandas
+  - networkx
+  - tqdm
+  - scikit-learn
+  - pytorch::pytorch
+  - pytorch::torchvision
+  - pip
+  - pip:
+    - dgl
+    - fastjet
+    - uproot3-methods
+    - uproot>=4.0
