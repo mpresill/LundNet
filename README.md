@@ -67,7 +67,7 @@ lundnet --demo --save test --device cpu --num-epochs 1
 
 - `--device cpu` — safe default; uses all CPU cores via PyTorch's ARM-optimised
   backend with Apple's Accelerate framework (BLAS).
-- `--device mps` — uses Apple's Metal GPU (MPS backend, requires PyTorch ≥ 1.12).
+- `--device mps` — uses Apple's Metal GPU (MPS backend, requires PyTorch ≥ 2.0).
   DGL's MPS support is still experimental; `--device cpu` is recommended for
   stability.
 
